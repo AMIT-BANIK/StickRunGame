@@ -43,21 +43,32 @@ public class GamePanel extends JPanel {
     private static int jumpCount = 0;
     private JLabel scoreLabel;
     private int score;
+
     private Rectangle border;
     private boolean isGameOver;
     private int obstacleSpeed;
     private Timer obstacleTimer1;
+    private JLabel highScoreLabel;
+    private int highScore;
 
     // constructors
     public GamePanel() {
 
         setPreferredSize( new Dimension( 1000, 300));
         setFocusable(true);
+        setLayout(null);
 
         scoreLabel = new JLabel();
+        highScoreLabel = new JLabel();
+
+        scoreLabel.setBounds(20, 20, 200, 20);
+        highScoreLabel.setBounds(20, 40, 200, 20);
+
+
+        add(scoreLabel);
+        add(highScoreLabel);
 
         init();
-        add(scoreLabel);
 
         this.addMouseListener( new JumpMouseListener());
         this.addKeyListener( new JumpKeyListener());
@@ -67,7 +78,10 @@ public class GamePanel extends JPanel {
 
     private void init() {
         score=0;
+        highScore = HighScore.loadHighScore();
         scoreLabel.setText("Score: "+score);
+        highScoreLabel.setText("High Score: " + highScore);
+
         obstacleSpeed = 6;
         index = 0;
         heightOfJump = 0;
@@ -101,16 +115,16 @@ public class GamePanel extends JPanel {
 
     public void paintComponent( Graphics g) {
         super.paintComponent(g);
-        //setBackground( Color.WHITE);
+
         Graphics2D g2 = ( Graphics2D) g;
 
-        //	g2.drawString( "by Yalchin", this.getWidth()-100, 20);
+
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
 
 
         g2.drawImage( runnerGif.get( index), 30, BASEY - 80 - heightOfJump, 80, 80, this);
-        //	g2.drawRect( 50, BASEY - 80 - heightOfJump, 40, 70);
+
 
         g2.fillRect(0, BASEY, getWidth(), 8);
         border.setLocation(50, BASEY - 80 - heightOfJump);
@@ -143,6 +157,8 @@ public class GamePanel extends JPanel {
                 randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
                 score++;
                 scoreLabel.setText("Score: "+score);
+
+
             }
 
             obstacles.remove();
@@ -163,7 +179,11 @@ public class GamePanel extends JPanel {
                 jumpTimer.stop();
                 if ( jumpTimer.getActionListeners()[0] != null)
                     jumpTimer.removeActionListener( jumpTimer.getActionListeners()[0]);
-
+                if (score > highScore) {
+                    HighScore.saveHighScore(score);
+                    highScore = score;
+                    highScoreLabel.setText("High Score: " + highScore);
+                }
                 int confirm = JOptionPane.showConfirmDialog(null, scoreLabel.getText() + "\n" + "Play again?", "Game Over!", 0);
                 if ( confirm == 0)
                     init();
