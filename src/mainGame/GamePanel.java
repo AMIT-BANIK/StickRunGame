@@ -24,7 +24,7 @@ import shapes.Rectangle;
 import shapes.ShapeContainer;
 import shapes.Square;
 
-public class RunnerGamePanel extends JPanel {
+public class GamePanel extends JPanel {
 
     // constants
     public static final int BASEY = 250;
@@ -32,6 +32,7 @@ public class RunnerGamePanel extends JPanel {
     public static final int MAXGAP = 340;
 
     // properties
+    private Image backgroundImage;
     private ShapeContainer obstacles;
     private Timer obstacleTimer, runnerTimer, jumpTimer;
     private static int randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
@@ -41,23 +42,22 @@ public class RunnerGamePanel extends JPanel {
     private boolean flag;
     private static int jumpCount = 0;
     private JLabel scoreLabel;
-
+    private int score;
     private Rectangle border;
     private boolean isGameOver;
     private int obstacleSpeed;
     private Timer obstacleTimer1;
 
     // constructors
-    public RunnerGamePanel() {
+    public GamePanel() {
 
-        setPreferredSize( new Dimension( 800, 300));
+        setPreferredSize( new Dimension( 1000, 300));
         setFocusable(true);
 
         scoreLabel = new JLabel();
 
         init();
         add(scoreLabel);
-        //	add( new JLabel( "<html><br><h2>by Yalchin</h2></html>"));
 
         this.addMouseListener( new JumpMouseListener());
         this.addKeyListener( new JumpKeyListener());
@@ -66,9 +66,8 @@ public class RunnerGamePanel extends JPanel {
     }
 
     private void init() {
-
-
-
+        score=0;
+        scoreLabel.setText("Score: "+score);
         obstacleSpeed = 6;
         index = 0;
         heightOfJump = 0;
@@ -82,8 +81,11 @@ public class RunnerGamePanel extends JPanel {
         obstacles = new ShapeContainer();
         obstacles.add( new Obstacle( 780, BASEY - 20));
 
+        backgroundImage = new ImageIcon(this.getClass().getResource("/images/bc.png")).getImage();
+
+
         runnerGif = new ArrayList<Image>();
-        for ( int i = 0; i < 9; i ++)
+        for ( int i = 11; i < 17; i ++)
             runnerGif.add(( new ImageIcon( this.getClass().getResource( "/images/tmp-" + i + ".gif")).getImage()));
 
         obstacleTimer = new Timer(obstacleSpeed, new TimerActionListener());
@@ -99,10 +101,11 @@ public class RunnerGamePanel extends JPanel {
 
     public void paintComponent( Graphics g) {
         super.paintComponent(g);
-        setBackground( Color.WHITE);
+        //setBackground( Color.WHITE);
         Graphics2D g2 = ( Graphics2D) g;
 
         //	g2.drawString( "by Yalchin", this.getWidth()-100, 20);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
 
 
@@ -138,8 +141,8 @@ public class RunnerGamePanel extends JPanel {
             if ( 800 - obstacle.getX() == randomGap) {
                 obstacles.add( new Obstacle( 780, BASEY - 20));
                 randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
-
-
+                score++;
+                scoreLabel.setText("Score: "+score);
             }
 
             obstacles.remove();
