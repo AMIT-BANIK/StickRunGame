@@ -11,7 +11,7 @@ public class Game extends JFrame {
         GamePanel = new GamePanel();
 
         setDefaultCloseOperation( EXIT_ON_CLOSE);
-        setTitle( "Stick Run Game");
+        setTitle( "Run to Overcome Obstacle");
         setLocation(500, 200);
         add( GamePanel);
         pack();

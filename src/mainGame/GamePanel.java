@@ -13,13 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
+import javax.swing.*;
 import shapes.Collectible;
 import shapes.Rectangle;
 import shapes.ShapeContainer;
@@ -144,6 +138,12 @@ public class GamePanel extends JPanel {
         obstacleTimer.start();
         obstacleTimer1.start();
         runnerTimer.start();
+
+        setFocusable(true);
+        requestFocusInWindow();
+        revalidate();
+        repaint();
+
     }
 
     public void paintComponent( Graphics g) {
@@ -162,7 +162,6 @@ public class GamePanel extends JPanel {
         while( i.hasNext()) {
             ( (Obstacle) i.next() ).draw(g2);
         }
-
         // Draw collectibles
         Iterator j = collectibles.iterator();
         while (j.hasNext()) {
@@ -205,13 +204,7 @@ public class GamePanel extends JPanel {
            //collectable generateing time logic
             if (collectibles.size() == 0 && Math.random() < 0.01) {
                 int xPos = 800;
-                int yPos;
-                if (Math.random() < 0.5) {
-                    yPos = BASEY - 100 - (int)(Math.random() * 60);
-                } else {
-                    yPos = BASEY - 20 - (int)(Math.random() * 10);
-                }
-
+                int yPos = BASEY - 80 - (int)(Math.random() * 40);
                 collectibles.add(new Collectible(xPos, yPos));
             }
 
@@ -221,9 +214,8 @@ public class GamePanel extends JPanel {
                 collectible.setLocation(collectible.getX() - 1, collectible.getY());
 
                 if (collectible.getX() < -collectible.getSize()) {
-                    collectibles.remove();  // remove selected collectibles, so mark selected first
+                    collectibles.remove();
                 }
-
                 if (!collectible.getSelected() && border.contains(collectible.getX() + collectible.getSize()/2, collectible.getY() + collectible.getSize()/2) != null) {
                     collectible.setSelected(true);
                     score += 5;  // increase score by 5 on collection
@@ -251,6 +243,7 @@ public class GamePanel extends JPanel {
                 }
 
                 obstacleTimer.stop();
+
                 for (ActionListener l : obstacleTimer.getActionListeners()) {
                     obstacleTimer.removeActionListener(l);
                 }
@@ -267,19 +260,25 @@ public class GamePanel extends JPanel {
                 }
 
                 int confirm = JOptionPane.showConfirmDialog(
-                        null,
+                        GamePanel.this,
                         scoreLabel.getText() + "\nPlay again?",
                         "Game Over!",
-                        JOptionPane.YES_NO_OPTION
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE
                 );
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    init();
+                    SwingUtilities.invokeLater(() -> {
+                        init();
+                        setFocusable(true);
+                        requestFocusInWindow();
+                        revalidate();
+                        repaint();
+                    });
                 } else {
                     System.exit(0);
                 }
             }
-
             repaint();
         }
     }
@@ -336,7 +335,6 @@ public class GamePanel extends JPanel {
                 }
             }
             else if ( e.getExtendedKeyCode() == e.VK_DOWN) {
-                //	jumpTimer.stop();
                 jumpTimer.setDelay(2);
 
             }
