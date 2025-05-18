@@ -64,7 +64,6 @@ public class GamePanel extends JPanel {
         scoreLabel.setBounds(20, 20, 200, 20);
         highScoreLabel.setBounds(20, 40, 200, 20);
 
-
         add(scoreLabel);
         add(highScoreLabel);
 
@@ -72,8 +71,6 @@ public class GamePanel extends JPanel {
 
         this.addMouseListener( new JumpMouseListener());
         this.addKeyListener( new JumpKeyListener());
-
-
     }
 
     private void init() {
@@ -97,7 +94,6 @@ public class GamePanel extends JPanel {
 
         backgroundImage = new ImageIcon(this.getClass().getResource("/images/bc.png")).getImage();
 
-
         runnerGif = new ArrayList<Image>();
         for ( int i = 11; i < 17; i ++)
             runnerGif.add(( new ImageIcon( this.getClass().getResource( "/images/tmp-" + i + ".gif")).getImage()));
@@ -109,8 +105,6 @@ public class GamePanel extends JPanel {
         obstacleTimer.start();
         obstacleTimer1.start();
         runnerTimer.start();
-
-
     }
 
     public void paintComponent( Graphics g) {
@@ -118,13 +112,9 @@ public class GamePanel extends JPanel {
 
         Graphics2D g2 = ( Graphics2D) g;
 
-
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-
-
         g2.drawImage( runnerGif.get( index), 30, BASEY - 80 - heightOfJump, 80, 80, this);
-
 
         g2.fillRect(0, BASEY, getWidth(), 8);
         border.setLocation(50, BASEY - 80 - heightOfJump);
@@ -133,8 +123,6 @@ public class GamePanel extends JPanel {
         while( i.hasNext()) {
             ( (Obstacle) i.next() ).draw(g2);
         }
-
-
     }
 
     class TimerActionListener implements ActionListener {
@@ -149,16 +137,18 @@ public class GamePanel extends JPanel {
                     obstacle.setSelected( true);
                 }
 
+                if (!obstacle.isScored() && obstacle.getX() + obstacle.getSide() < border.getX()) {
+                    score++;
+                    obstacle.setScored(true);
+                    scoreLabel.setText("Score: " + score);
+                }
+
             }
 
             Obstacle obstacle = ( (Obstacle) obstacles.getShape( obstacles.size() - 1) );
             if ( 800 - obstacle.getX() == randomGap) {
                 obstacles.add( new Obstacle( 780, BASEY - 20));
                 randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
-                score++;
-                scoreLabel.setText("Score: "+score);
-
-
             }
 
             obstacles.remove();
@@ -199,10 +189,11 @@ public class GamePanel extends JPanel {
     class RunnerActionListener implements ActionListener {
         public void actionPerformed( ActionEvent e) {
 
-            if ( index == 8)
+            if (index >= runnerGif.size() - 1)
                 index = 0;
             else
                 index++;
+
         }
     }
 
@@ -211,8 +202,6 @@ public class GamePanel extends JPanel {
 
             jumpTimer.setDelay(3);
             jumpTimer.start();
-
-
         }
 
     }
@@ -220,8 +209,6 @@ public class GamePanel extends JPanel {
     class JumpActionListener implements ActionListener {
 
         public void actionPerformed( ActionEvent e) {
-
-
 
             if ( jumpCount == 65) {
                 flag = true;
@@ -240,8 +227,6 @@ public class GamePanel extends JPanel {
             }
 
             heightOfJump = 1 * jumpCount;
-
-
         }
     }
 

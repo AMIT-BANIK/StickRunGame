@@ -9,11 +9,13 @@ import shapes.Square;
 public class Obstacle extends Square implements Drawable{
 
     private int R, G, B;
+    private boolean scored;
 
     public Obstacle( int x, int y) {
 
         super( 20);
         setLocation(x, y);
+        scored = false;
 
         R = (int) (Math.random() * 256);
         G = (int) (Math.random() * 256);
@@ -26,5 +28,12 @@ public class Obstacle extends Square implements Drawable{
 
         g.setColor( new Color( R, G, B));
         g.fillRect(getX(), getY(), side, side);
+    }
+    public boolean isScored() {
+        return scored;
+    }
+
+    public void setScored(boolean scored) {
+        this.scored = scored;
     }
 }
