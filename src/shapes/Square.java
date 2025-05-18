@@ -15,10 +15,9 @@ public class Square extends Rectangle {
         super(side, side);
         this.side = side;
 
-
     }
 
-
-
-
+    public int getSide() {
+        return side;
+    }
 }
