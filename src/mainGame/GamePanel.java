@@ -47,31 +47,6 @@ public class GamePanel extends JPanel {
     private int highScore;
     private boolean isRightArrowPressed ;
 
-    private void clearAllTimers() {
-        if (obstacleTimer != null) {
-            for (ActionListener l : obstacleTimer.getActionListeners()) {
-                obstacleTimer.removeActionListener(l);
-            }
-        }
-
-        if (obstacleTimer1 != null) {
-            for (ActionListener l : obstacleTimer1.getActionListeners()) {
-                obstacleTimer1.removeActionListener(l);
-            }
-        }
-
-        if (jumpTimer != null) {
-            for (ActionListener l : jumpTimer.getActionListeners()) {
-                jumpTimer.removeActionListener(l);
-            }
-        }
-
-        if (runnerTimer != null) {
-            for (ActionListener l : runnerTimer.getActionListeners()) {
-                runnerTimer.removeActionListener(l);
-            }
-        }
-    }
 
     // constructors
     public GamePanel() {
@@ -92,17 +67,37 @@ public class GamePanel extends JPanel {
         init();
 
         this.addMouseListener( new JumpMouseListener());
-        this.addKeyListener( new JumpKeyListener());
+        //this.addKeyListener( new JumpKeyListener());
+        this.addKeyListener(new GameKey(this));
+
     }
+    public Timer getJumpTimer() {
+        return jumpTimer;
+    }
+
+    public Timer getObstacleTimer() {
+        return obstacleTimer;
+    }
+
+    public Timer getRunnerTimer() {
+        return runnerTimer;
+    }
+
+    public int getObstacleSpeed() {
+        return obstacleSpeed;
+    }
+
+    public void setObstacleSpeed(int speed) {
+        this.obstacleSpeed = speed;
+    }
+
 
     private void init() {
         if (obstacleTimer != null) obstacleTimer.stop();
         if (obstacleTimer1 != null) obstacleTimer1.stop();
         if (jumpTimer != null) jumpTimer.stop();
         if (runnerTimer != null) runnerTimer.stop();
-
         clearAllTimers();
-
         score = 0;
         scoreLabel.setText("Score: " + score);
         highScore = HighScore.loadHighScore();
@@ -161,7 +156,6 @@ public class GamePanel extends JPanel {
         while (j.hasNext()) {
             ((Collectible) j.next()).draw(g);
         }
-
     }
 
     class TimerActionListener implements ActionListener {
@@ -192,16 +186,13 @@ public class GamePanel extends JPanel {
                 obstacles.add(new Obstacle(780, BASEY - 20));
                 randomGap = (int) (Math.random() * (MAXGAP - MINGAP)) + MINGAP;
             }
-
             obstacles.remove();
-
            //collectable generateing time logic
             if (collectibles.size() == 0 && Math.random() < 0.01) {
                 int xPos = 800;
                 int yPos = BASEY - 80 - (int)(Math.random() * 40);
                 collectibles.add(new Collectible(xPos, yPos));
             }
-
             // Move collectibles
             for (int i = 0; i < collectibles.size(); i++) {
                 Collectible collectible = (Collectible) collectibles.getShape(i);
@@ -230,7 +221,6 @@ public class GamePanel extends JPanel {
                     }
                 }
             }
-
 
             if (isGameOver) {
                 runnerTimer.stop();
@@ -286,19 +276,16 @@ public class GamePanel extends JPanel {
                 index = 0;
             else
                 index++;
-
         }
     }
 
     class JumpMouseListener extends MouseAdapter {
         public void mouseClicked( MouseEvent e) {
-
             jumpTimer.setDelay(3);
             if (!jumpTimer.isRunning()) {
                 jumpTimer.start();
             }
         }
-
     }
 
     class JumpActionListener implements ActionListener {
@@ -318,47 +305,32 @@ public class GamePanel extends JPanel {
             else {
                 jumpCount++;
             }
-            heightOfJump = 1 * jumpCount;
+            heightOfJump = 2 * jumpCount;
+
         }
     }
-
-    class JumpKeyListener extends KeyAdapter {
-        public void keyPressed(KeyEvent e) {
-            if (e.getExtendedKeyCode() == KeyEvent.VK_UP) {
-                jumpTimer.setDelay(3);
-                if (!jumpTimer.isRunning()) {
-                    jumpTimer.start();
-                }
-            } else if (e.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
-                jumpTimer.setDelay(2);
-            } else if (e.getExtendedKeyCode() == KeyEvent.VK_RIGHT) {
-                if (!obstacleTimer.isRunning()) {
-                    obstacleTimer.start();
-                }
-                if (!runnerTimer.isRunning()) {
-                    runnerTimer.start();
-                }
-
-                if (obstacleSpeed > 1) {
-                    obstacleSpeed--;
-                    obstacleTimer.setDelay(obstacleSpeed);
-                }
-            } else if (e.getExtendedKeyCode() == KeyEvent.VK_LEFT) {
-                if (obstacleSpeed < 5) {
-                    obstacleSpeed++;
-                    obstacleTimer.setDelay(obstacleSpeed);
-                }
+    private void clearAllTimers() {
+        if (obstacleTimer != null) {
+            for (ActionListener l : obstacleTimer.getActionListeners()) {
+                obstacleTimer.removeActionListener(l);
             }
         }
-        @Override
-        public void keyReleased(KeyEvent e) {
-            if (e.getExtendedKeyCode() == KeyEvent.VK_RIGHT) {
-                if (runnerTimer != null && runnerTimer.isRunning()) {
-                    runnerTimer.stop();
-                }
-                if (obstacleTimer != null && obstacleTimer.isRunning()) {
-                    obstacleTimer.stop();
-                }
+
+        if (obstacleTimer1 != null) {
+            for (ActionListener l : obstacleTimer1.getActionListeners()) {
+                obstacleTimer1.removeActionListener(l);
+            }
+        }
+
+        if (jumpTimer != null) {
+            for (ActionListener l : jumpTimer.getActionListeners()) {
+                jumpTimer.removeActionListener(l);
+            }
+        }
+
+        if (runnerTimer != null) {
+            for (ActionListener l : runnerTimer.getActionListeners()) {
+                runnerTimer.removeActionListener(l);
             }
         }
     }

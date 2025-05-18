@@ -17,7 +17,6 @@ public class Game extends JFrame {
         pack();
         setResizable(false);
         setVisible( true);
-        //setResizable( false);
 
     }
 
