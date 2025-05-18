@@ -39,13 +39,13 @@ public class GamePanel extends JPanel {
     private static int jumpCount = 0;
     private JLabel scoreLabel;
     private int score;
-
     private Rectangle border;
     private boolean isGameOver;
     private int obstacleSpeed;
     private Timer obstacleTimer1;
     private JLabel highScoreLabel;
     private int highScore;
+    private boolean isRightArrowPressed ;
 
     private void clearAllTimers() {
         if (obstacleTimer != null) {
@@ -130,20 +130,14 @@ public class GamePanel extends JPanel {
             runnerGif.add((new ImageIcon(this.getClass().getResource("/images/tmp-" + i + ".gif")).getImage()));
         }
 
+        runnerTimer = new Timer(100, new RunnerActionListener());
         obstacleTimer = new Timer(obstacleSpeed, new TimerActionListener());
-        obstacleTimer1 = new Timer(obstacleSpeed, new TimerActionListener());
-        runnerTimer = new Timer(32, new RunnerActionListener());
         jumpTimer = new Timer(3, new JumpActionListener());
-
-        obstacleTimer.start();
-        obstacleTimer1.start();
-        runnerTimer.start();
 
         setFocusable(true);
         requestFocusInWindow();
         revalidate();
         repaint();
-
     }
 
     public void paintComponent( Graphics g) {
@@ -225,16 +219,18 @@ public class GamePanel extends JPanel {
 
             collectibles.remove();
 
-            if (obstacles.size() > 0 && !isGameOver) {
+            if (!isGameOver && obstacles.size() > 0) {
                 Obstacle firstObstacle = (Obstacle) obstacles.getShape(0);
 
                 for (int i = 0; i < 20; i++) {
                     if (border.contains(firstObstacle.getX() + i, firstObstacle.getY()) != null) {
+                        System.out.println("Collision detected!");
                         isGameOver = true;
                         break;
                     }
                 }
             }
+
 
             if (isGameOver) {
                 runnerTimer.stop();
@@ -327,28 +323,41 @@ public class GamePanel extends JPanel {
     }
 
     class JumpKeyListener extends KeyAdapter {
-        public void keyPressed( KeyEvent e){
-            if ( e.getExtendedKeyCode() == e.VK_UP) {
+        public void keyPressed(KeyEvent e) {
+            if (e.getExtendedKeyCode() == KeyEvent.VK_UP) {
                 jumpTimer.setDelay(3);
                 if (!jumpTimer.isRunning()) {
                     jumpTimer.start();
                 }
-            }
-            else if ( e.getExtendedKeyCode() == e.VK_DOWN) {
+            } else if (e.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
                 jumpTimer.setDelay(2);
-
-            }
-            else if ( e.getExtendedKeyCode() == e.VK_RIGHT) {
-                if ( obstacleSpeed > 1) {
-                    obstacleSpeed--;
-                    obstacleTimer.setDelay( obstacleSpeed);
+            } else if (e.getExtendedKeyCode() == KeyEvent.VK_RIGHT) {
+                if (!obstacleTimer.isRunning()) {
+                    obstacleTimer.start();
+                }
+                if (!runnerTimer.isRunning()) {
+                    runnerTimer.start();
                 }
 
-            }
-            else if ( e.getExtendedKeyCode() == e.VK_LEFT) {
-                if ( obstacleSpeed < 5) {
+                if (obstacleSpeed > 1) {
+                    obstacleSpeed--;
+                    obstacleTimer.setDelay(obstacleSpeed);
+                }
+            } else if (e.getExtendedKeyCode() == KeyEvent.VK_LEFT) {
+                if (obstacleSpeed < 5) {
                     obstacleSpeed++;
-                    obstacleTimer.setDelay( obstacleSpeed);
+                    obstacleTimer.setDelay(obstacleSpeed);
+                }
+            }
+        }
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getExtendedKeyCode() == KeyEvent.VK_RIGHT) {
+                if (runnerTimer != null && runnerTimer.isRunning()) {
+                    runnerTimer.stop();
+                }
+                if (obstacleTimer != null && obstacleTimer.isRunning()) {
+                    obstacleTimer.stop();
                 }
             }
         }
