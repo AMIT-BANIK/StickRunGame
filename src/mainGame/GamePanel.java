@@ -126,15 +126,13 @@ public class GamePanel extends JPanel {
     }
 
     class TimerActionListener implements ActionListener {
-        public void actionPerformed( ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i < obstacles.size(); i++) {
+                Obstacle obstacle = (Obstacle) obstacles.getShape(i);
+                obstacle.setLocation(obstacle.getX() - 1, obstacle.getY());
 
-
-            for ( int i = 0; i < obstacles.size(); i++) {
-                Obstacle obstacle = ( (Obstacle) obstacles.getShape(i) );
-                obstacle.setLocation( obstacle.getX() - 1, obstacle.getY());
-
-                if ( obstacle.getX() == -10) {
-                    obstacle.setSelected( true);
+                if (obstacle.getX() == -10) {
+                    obstacle.setSelected(true);
                 }
 
                 if (!obstacle.isScored() && obstacle.getX() + obstacle.getSide() < border.getX()) {
@@ -142,46 +140,69 @@ public class GamePanel extends JPanel {
                     obstacle.setScored(true);
                     scoreLabel.setText("Score: " + score);
                 }
-
             }
 
-            Obstacle obstacle = ( (Obstacle) obstacles.getShape( obstacles.size() - 1) );
-            if ( 800 - obstacle.getX() == randomGap) {
-                obstacles.add( new Obstacle( 780, BASEY - 20));
-                randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
+            if (obstacles.size() > 0) {
+                Obstacle lastObstacle = (Obstacle) obstacles.getShape(obstacles.size() - 1);
+                if (800 - lastObstacle.getX() == randomGap) {
+                    obstacles.add(new Obstacle(780, BASEY - 20));
+                    randomGap = (int) (Math.random() * (MAXGAP - MINGAP)) + MINGAP;
+                }
+            } else {
+
+                obstacles.add(new Obstacle(780, BASEY - 20));
+                randomGap = (int) (Math.random() * (MAXGAP - MINGAP)) + MINGAP;
             }
 
             obstacles.remove();
 
-            for ( int i = 0; !isGameOver && i < 20; i++) {
+            if (obstacles.size() > 0 && !isGameOver) {
+                Obstacle firstObstacle = (Obstacle) obstacles.getShape(0);
 
-                if ( border.contains(  ( (Square) obstacles.getShape(0)).getX() + i , ((Square) obstacles.getShape(0)).getY()) != null) {
-                    isGameOver = true;
+                for (int i = 0; i < 20; i++) {
+                    if (border.contains(firstObstacle.getX() + i, firstObstacle.getY()) != null) {
+                        isGameOver = true;
+                        break;
+                    }
                 }
             }
 
-            if ( isGameOver) {
-
+            if (isGameOver) {
                 runnerTimer.stop();
-                runnerTimer.removeActionListener( runnerTimer.getActionListeners()[0]);
+                for (ActionListener l : runnerTimer.getActionListeners()) {
+                    runnerTimer.removeActionListener(l);
+                }
+
                 obstacleTimer.stop();
-                obstacleTimer.removeActionListener( obstacleTimer.getActionListeners()[0]);
+                for (ActionListener l : obstacleTimer.getActionListeners()) {
+                    obstacleTimer.removeActionListener(l);
+                }
+
                 jumpTimer.stop();
-                if ( jumpTimer.getActionListeners()[0] != null)
-                    jumpTimer.removeActionListener( jumpTimer.getActionListeners()[0]);
+                for (ActionListener l : jumpTimer.getActionListeners()) {
+                    jumpTimer.removeActionListener(l);
+                }
+
                 if (score > highScore) {
                     HighScore.saveHighScore(score);
                     highScore = score;
                     highScoreLabel.setText("High Score: " + highScore);
                 }
-                int confirm = JOptionPane.showConfirmDialog(null, scoreLabel.getText() + "\n" + "Play again?", "Game Over!", 0);
-                if ( confirm == 0)
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        scoreLabel.getText() + "\nPlay again?",
+                        "Game Over!",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
                     init();
-                else
+                } else {
                     System.exit(0);
+                }
             }
 
-            //	System.out.println(obstacles.size());
             repaint();
         }
     }
