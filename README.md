@@ -36,7 +36,6 @@ Shahajalal University of Science and Technology
 
 🧱**Encapsulation –** Each class like Player, Obstacle, Coin, and GamePanel has its own logic and data, making the game components modular and easy to maintain.
 
-🧑‍💻 Environment Setup
 
 🧬**Inheritance –** Shape-related classes like Circle, Rectangle, Square, and Coin inherit from a common Shape class, allowing shared functionality like position and area calculation.
 
