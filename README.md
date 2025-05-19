@@ -31,6 +31,7 @@ Shahajalal University of Science and Technology
 ↑ (UP) |Jump over obstacle and collect coins|
 
 
+
 # 📐 OOP Blueprint of the Game
 
 🧱**Encapsulation –** Each class like Player, Obstacle, Coin, and GamePanel has its own logic and data, making the game components modular and easy to maintain.
