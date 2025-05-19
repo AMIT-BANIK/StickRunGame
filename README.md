@@ -47,19 +47,19 @@ Shahajalal University of Science and Technology
 
 🚀 **What You Need**
 
-Java JDK 8 or higher                                                                                                                                                                       
-Java-compatible IDE (e.g., IntelliJ IDEA)
+ ◾Java JDK 8 or higher                                                                                                                                                                       
+ ◾Java-compatible IDE (e.g., IntelliJ IDEA)
 
 🧪 **Setup Instructions**
                                                     
-Clone the repository:
+__1.__ Clone the repository:
 
 https://github.com/AMIT-BANIK/StickRunGame.git
 
-Open the project in your preferred IDE
+__2.__ Open the project in your preferred IDE
 
-Compile and run the Game class located in the mainGame package
+__3.__ Compile and run the Game class located in the mainGame package
 
-Start playing and help the stickman overcome obstacles and collect coins!
+__4.__ Start playing and help the stickman overcome obstacles and collect coins!
 
 
