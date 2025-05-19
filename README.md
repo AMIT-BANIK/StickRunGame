@@ -54,6 +54,8 @@ Java-compatible IDE (e.g., IntelliJ IDEA)
                                                     
 Clone the repository:
 
+https://github.com/AMIT-BANIK/StickRunGame.git
+
 Open the project in your preferred IDE
 
 Compile and run the Game class located in the mainGame package
