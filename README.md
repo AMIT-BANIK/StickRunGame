@@ -29,3 +29,14 @@ Shahajalal University of Science and Technology
 |-|-|
 → (Right) |Move Stickman Forward|
 ↑ (UP) |Jump over obstacle and collect coins|
+
+
+# 📐 OOP Blueprint of the Game
+
+🧱**Encapsulation –** Each class like Player, Obstacle, Coin, and GamePanel has its own logic and data, making the game components modular and easy to maintain.
+
+🧬**Inheritance –** Shape-related classes like Circle, Rectangle, Square, and Coin inherit from a common Shape class, allowing shared functionality like position and area calculation.
+
+🔁 **Polymorphism –** The game uses polymorphism to handle different shape types through a common interface (Selectable, Drawable, etc.), enabling flexible rendering and interaction logic without knowing the exact object type.
+
+🧊 **Abstraction –** The game structure separates user input, game logic, and graphics rendering, making the codebase cleaner and easier to extend.
