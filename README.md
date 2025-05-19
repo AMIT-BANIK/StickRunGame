@@ -4,6 +4,6 @@ StickRun is a fast-paced, Java-based side-scrolling runner game built using Java
 # Author Information 
 
 Name : Amit Banik        
-Registration Number : 2022831005
-Department : Software Engineering 
+Registration Number : 2022831005     
+Department : Software Engineering    
 Shahajalal University of Science and Technology 
