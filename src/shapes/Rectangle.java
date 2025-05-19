@@ -20,15 +20,6 @@ public class Rectangle extends Shape implements Selectable {
         return width * height;
     }
 
-    public String toString() {
-
-        String str;
-
-        str = "\nShape : " + ( "" + this.getClass()).substring( 13, ( "" + this.getClass()).length()) + "\nArea : " + this.getArea()
-                + "\nSelected : " + getSelected();
-
-        return str;
-    }
 
     @Override
     public boolean getSelected() {

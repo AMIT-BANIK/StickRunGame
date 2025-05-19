@@ -3,13 +3,13 @@ package shapes;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Collectible extends Shape implements Selectable {
+public class Coins extends Shape implements Selectable {
 
     private int size = 20;  // size of the icon (width & height)
     private boolean selected = false;  // whether collected or not
     private Color color;
 
-    public Collectible(int x, int y) {
+    public Coins(int x, int y) {
         this.x = x;
         this.y = y;
         this.color = Color.YELLOW;  // or use random color

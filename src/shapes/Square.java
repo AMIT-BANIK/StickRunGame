@@ -1,9 +1,5 @@
 package shapes;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
-
 public class Square extends Rectangle {
 
     // properties
@@ -14,9 +10,7 @@ public class Square extends Rectangle {
 
         super(side, side);
         this.side = side;
-
     }
-
     public int getSide() {
         return side;
     }

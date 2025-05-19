@@ -2,7 +2,6 @@ package shapes;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class ShapeContainer implements Iterable{
 
     // properties
@@ -28,18 +27,6 @@ public class ShapeContainer implements Iterable{
         for (int i = 0; i < shapes.size(); i++)
             area = area + shapes.get(i).getArea();
         return area;
-    }
-
-    public String toString() {
-
-        String str;
-
-        str = "";
-        for (Shape shape : shapes) {
-
-            str = str + shape.toString() + "\n";
-        }
-        return str;
     }
 
     public Shape contains( int x, int y) {
