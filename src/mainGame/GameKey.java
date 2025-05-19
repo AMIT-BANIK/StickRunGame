@@ -16,7 +16,7 @@ public class GameKey extends KeyAdapter {
     public void keyPressed(KeyEvent e) {
         Timer jumpTimer = panel.getJumpTimer();
         Timer obstacleTimer = panel.getObstacleTimer();
-        Timer runnerTimer = panel.getRunnerTimer();
+        Timer runnerTimer = panel.getplayerTimer();
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
@@ -56,8 +56,8 @@ public class GameKey extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if (panel.getRunnerTimer().isRunning()) {
-                panel.getRunnerTimer().stop();
+            if (panel.getplayerTimer().isRunning()) {
+                panel.getplayerTimer().stop();
             }
             if (panel.getObstacleTimer().isRunning()) {
                 panel.getObstacleTimer().stop();

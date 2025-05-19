@@ -3,10 +3,8 @@ package mainGame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
-
 import shapes.Drawable;
 import shapes.Square;
-import shapes.Triangle;
 
 public class Obstacle extends Square implements Drawable{
 

@@ -1,6 +1,5 @@
 package mainGame;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,7 +20,7 @@ public class GamePanel extends JPanel {
     // properties
     private Image backgroundImage;
     private ShapeContainer obstacles;
-    private ShapeContainer collectibles;
+    private ShapeContainer Coins;
     private Timer obstacleTimer, playerTimer, jumpTimer;
     private static int randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
     private ArrayList<Image> playerGif;
@@ -68,7 +67,7 @@ public class GamePanel extends JPanel {
         return obstacleTimer;
     }
 
-    public Timer getRunnerTimer() {
+    public Timer getplayerTimer() {
         return playerTimer;
     }
 
@@ -105,7 +104,7 @@ public class GamePanel extends JPanel {
         obstacles = new ShapeContainer();
         obstacles.add(new Obstacle(780, BASEY - 20));
 
-        collectibles = new ShapeContainer();
+        Coins = new ShapeContainer();
 
         backgroundImage = new ImageIcon(this.getClass().getResource("/images/bc.png")).getImage();
 
@@ -141,9 +140,9 @@ public class GamePanel extends JPanel {
             ((Obstacle) shape).draw(g2);
         }
 
-        // Draw collectibles
-        for (Object shape : collectibles) {
-            ((Collectible) shape).draw(g);
+        // Draw Coins
+        for (Object shape : Coins) {
+            ((Coins) shape).draw(g);
         }
     }
 
@@ -177,18 +176,18 @@ public class GamePanel extends JPanel {
             }
             obstacles.remove();
            //collectable generateing time logic
-            if (collectibles.size() == 0 && Math.random() < 0.01) {
+            if (Coins.size() == 0 && Math.random() < 0.01) {
                 int xPos = 800;
                 int yPos = BASEY - 80 - (int)(Math.random() * 30);
-                collectibles.add(new Collectible(xPos, yPos));
+                Coins.add(new Coins(xPos, yPos));
             }
             // Move collectibles
-            for (int i = 0; i < collectibles.size(); i++) {
-                Collectible collectible = (Collectible) collectibles.getShape(i);
+            for (int i = 0; i < Coins.size(); i++) {
+                Coins collectible = (Coins) Coins.getShape(i);
                 collectible.setLocation(collectible.getX() - 1, collectible.getY());
 
                 if (collectible.getX() < -collectible.getSize()) {
-                    collectibles.remove();
+                    Coins.remove();
                 }
                 if (!collectible.getSelected() && player.contains(collectible.getX() + collectible.getSize()/2, collectible.getY() + collectible.getSize()/2) != null) {
                     collectible.setSelected(true);
@@ -197,7 +196,7 @@ public class GamePanel extends JPanel {
                 }
             }
 
-            collectibles.remove();
+            Coins.remove();
 
             if (!isGameOver && obstacles.size() > 0) {
                 Obstacle firstObstacle = (Obstacle) obstacles.getShape(0);
@@ -229,7 +228,7 @@ public class GamePanel extends JPanel {
                 }
 
                 if (score > highScore) {
-                    HighScore.saveHighScore(score);
+                    //HighScore.saveHighScore(score);
                     highScore = score;
                     highScoreLabel.setText("High Score: " + highScore);
                 }
