@@ -7,17 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.*;
-import shapes.Collectible;
-import shapes.Rectangle;
-import shapes.ShapeContainer;
-import shapes.Square;
+import shapes.*;
 
 public class GamePanel extends JPanel {
 
@@ -30,23 +22,22 @@ public class GamePanel extends JPanel {
     private Image backgroundImage;
     private ShapeContainer obstacles;
     private ShapeContainer collectibles;
-    private Timer obstacleTimer, runnerTimer, jumpTimer;
+    private Timer obstacleTimer, playerTimer, jumpTimer;
     private static int randomGap = (int) ( Math.random() * (MAXGAP - MINGAP)) + MINGAP;
-    private ArrayList<Image> runnerGif;
+    private ArrayList<Image> playerGif;
     private int index;
     private int heightOfJump;
     private boolean flag;
     private static int jumpCount = 0;
     private JLabel scoreLabel;
     private int score;
-    private Rectangle border;
+    private Rectangle player;
     private boolean isGameOver;
     private int obstacleSpeed;
     private Timer obstacleTimer1;
     private JLabel highScoreLabel;
     private int highScore;
     private boolean isRightArrowPressed ;
-
 
     // constructors
     public GamePanel() {
@@ -66,8 +57,6 @@ public class GamePanel extends JPanel {
 
         init();
 
-        this.addMouseListener( new JumpMouseListener());
-        //this.addKeyListener( new JumpKeyListener());
         this.addKeyListener(new GameKey(this));
 
     }
@@ -80,7 +69,7 @@ public class GamePanel extends JPanel {
     }
 
     public Timer getRunnerTimer() {
-        return runnerTimer;
+        return playerTimer;
     }
 
     public int getObstacleSpeed() {
@@ -96,7 +85,7 @@ public class GamePanel extends JPanel {
         if (obstacleTimer != null) obstacleTimer.stop();
         if (obstacleTimer1 != null) obstacleTimer1.stop();
         if (jumpTimer != null) jumpTimer.stop();
-        if (runnerTimer != null) runnerTimer.stop();
+        if (playerTimer != null) playerTimer.stop();
         clearAllTimers();
         score = 0;
         scoreLabel.setText("Score: " + score);
@@ -110,8 +99,8 @@ public class GamePanel extends JPanel {
         jumpCount = 0;
         isGameOver = false;
 
-        border = new Rectangle(35, 60);
-        border.setLocation(50, BASEY - 80 - heightOfJump);
+        player = new Rectangle(35, 60);
+        player.setLocation(50, BASEY - 80 - heightOfJump);
 
         obstacles = new ShapeContainer();
         obstacles.add(new Obstacle(780, BASEY - 20));
@@ -120,12 +109,12 @@ public class GamePanel extends JPanel {
 
         backgroundImage = new ImageIcon(this.getClass().getResource("/images/bc.png")).getImage();
 
-        runnerGif = new ArrayList<>();
+        playerGif = new ArrayList<>();
         for (int i = 11; i < 17; i++) {
-            runnerGif.add((new ImageIcon(this.getClass().getResource("/images/tmp-" + i + ".gif")).getImage()));
+            playerGif.add((new ImageIcon(this.getClass().getResource("/images/tmp-" + i + ".gif")).getImage()));
         }
 
-        runnerTimer = new Timer(100, new RunnerActionListener());
+        playerTimer = new Timer(100, new RunnerActionListener());
         obstacleTimer = new Timer(obstacleSpeed, new TimerActionListener());
         jumpTimer = new Timer(3, new JumpActionListener());
 
@@ -142,19 +131,19 @@ public class GamePanel extends JPanel {
 
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-        g2.drawImage( runnerGif.get( index), 30, BASEY - 80 - heightOfJump, 80, 80, this);
+        g2.drawImage( playerGif.get( index), 30, BASEY - 80 - heightOfJump, 80, 80, this);
 
         g2.fillRect(0, BASEY, getWidth(), 8);
-        border.setLocation(50, BASEY - 80 - heightOfJump);
+        player.setLocation(50, BASEY - 80 - heightOfJump);
 
-        Iterator i = obstacles.iterator();
-        while( i.hasNext()) {
-            ( (Obstacle) i.next() ).draw(g2);
+        //Draw obstacle
+        for (Object shape : obstacles) {
+            ((Obstacle) shape).draw(g2);
         }
+
         // Draw collectibles
-        Iterator j = collectibles.iterator();
-        while (j.hasNext()) {
-            ((Collectible) j.next()).draw(g);
+        for (Object shape : collectibles) {
+            ((Collectible) shape).draw(g);
         }
     }
 
@@ -168,7 +157,7 @@ public class GamePanel extends JPanel {
                     obstacle.setSelected(true);
                 }
 
-                if (!obstacle.isScored() && obstacle.getX() + obstacle.getSide() < border.getX()) {
+                if (!obstacle.isScored() && obstacle.getX() + obstacle.getSide() < player.getX()) {
                     score++;
                     obstacle.setScored(true);
                     scoreLabel.setText("Score: " + score);
@@ -190,7 +179,7 @@ public class GamePanel extends JPanel {
            //collectable generateing time logic
             if (collectibles.size() == 0 && Math.random() < 0.01) {
                 int xPos = 800;
-                int yPos = BASEY - 80 - (int)(Math.random() * 40);
+                int yPos = BASEY - 80 - (int)(Math.random() * 30);
                 collectibles.add(new Collectible(xPos, yPos));
             }
             // Move collectibles
@@ -201,7 +190,7 @@ public class GamePanel extends JPanel {
                 if (collectible.getX() < -collectible.getSize()) {
                     collectibles.remove();
                 }
-                if (!collectible.getSelected() && border.contains(collectible.getX() + collectible.getSize()/2, collectible.getY() + collectible.getSize()/2) != null) {
+                if (!collectible.getSelected() && player.contains(collectible.getX() + collectible.getSize()/2, collectible.getY() + collectible.getSize()/2) != null) {
                     collectible.setSelected(true);
                     score += 5;  // increase score by 5 on collection
                     scoreLabel.setText("Score: " + score);
@@ -214,7 +203,7 @@ public class GamePanel extends JPanel {
                 Obstacle firstObstacle = (Obstacle) obstacles.getShape(0);
 
                 for (int i = 0; i < 20; i++) {
-                    if (border.contains(firstObstacle.getX() + i, firstObstacle.getY()) != null) {
+                    if (player.contains(firstObstacle.getX() + i, firstObstacle.getY()) != null) {
                         System.out.println("Collision detected!");
                         isGameOver = true;
                         break;
@@ -223,9 +212,9 @@ public class GamePanel extends JPanel {
             }
 
             if (isGameOver) {
-                runnerTimer.stop();
-                for (ActionListener l : runnerTimer.getActionListeners()) {
-                    runnerTimer.removeActionListener(l);
+                playerTimer.stop();
+                for (ActionListener l : playerTimer.getActionListeners()) {
+                    playerTimer.removeActionListener(l);
                 }
 
                 obstacleTimer.stop();
@@ -272,19 +261,10 @@ public class GamePanel extends JPanel {
     class RunnerActionListener implements ActionListener {
         public void actionPerformed( ActionEvent e) {
 
-            if (index >= runnerGif.size() - 1)
+            if (index >= playerGif.size() - 1)
                 index = 0;
             else
                 index++;
-        }
-    }
-
-    class JumpMouseListener extends MouseAdapter {
-        public void mouseClicked( MouseEvent e) {
-            jumpTimer.setDelay(3);
-            if (!jumpTimer.isRunning()) {
-                jumpTimer.start();
-            }
         }
     }
 
@@ -306,7 +286,6 @@ public class GamePanel extends JPanel {
                 jumpCount++;
             }
             heightOfJump = 2 * jumpCount;
-
         }
     }
     private void clearAllTimers() {
@@ -328,9 +307,9 @@ public class GamePanel extends JPanel {
             }
         }
 
-        if (runnerTimer != null) {
-            for (ActionListener l : runnerTimer.getActionListeners()) {
-                runnerTimer.removeActionListener(l);
+        if (playerTimer != null) {
+            for (ActionListener l : playerTimer.getActionListeners()) {
+                playerTimer.removeActionListener(l);
             }
         }
     }
