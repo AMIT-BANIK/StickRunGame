@@ -43,6 +43,14 @@ Shahajalal University of Science and Technology
 
 🧊 **Abstraction –** The game structure separates user input, game logic, and graphics rendering, making the codebase cleaner and easier to extend.
 
+
+# Class Diagram of Stick Run Game
+
+The class diagram will help to understand the structure of the game. It will also assist in understanding the internal aspects of the game.
+
+![image alt](https://github.com/AMIT-BANIK/StickRunGame/blob/main/Stickrun%20Class%20Diagram.jpg?raw=true)
+
+
 # 🧑‍💻 Environment Setup
 
 🚀 **What You Need**
