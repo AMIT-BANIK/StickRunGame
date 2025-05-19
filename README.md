@@ -23,3 +23,9 @@ Shahajalal University of Science and Technology
 **⌛ Smooth Timing:** Uses timers to control obstacle appearance, jump duration, and character movement updates.
 
 **🚫 Collision Detection:** Detects collisions between the stickman and obstacles or coins for interaction and game logic.
+
+# Game Control 
+|key|Action|
+|-|-|
+→ (Right) |Move Stickman Forward|
+↑ (UP) |Jump over obstacle and collect coins|
